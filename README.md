@@ -1,1 +1,1 @@
-# geospot
+# GeoSpot
