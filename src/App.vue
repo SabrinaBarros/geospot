@@ -1,6 +1,7 @@
 <template>
-  <div id="app">
+  <div class="app">
     <button class="btn" @click="switchBaseMap">Trocar Base Map</button>
+    <!-- <input class="upload" type="file" id="upload" @change="handleFileChange" ref="fileInput" accept="geojson/*"/> -->
   </div>
 </template>
 
@@ -9,13 +10,11 @@
   import {GeoJsonLayer, ArcLayer} from '@deck.gl/layers';
   import maplibregl from 'maplibre-gl';
 
-  // GeoJSON
+  /* GeoJSON */
   const POINTS = './data/pontos_de_interesse.geojson';
   const MUNICIPIOS = './data/municipios.geojson';
 
-/* ------------------------------------------------------------------ */
-/* 1. Mapa MapLibre                                                   */
-/* ------------------------------------------------------------------ */
+  /* MapLibre Map */
   const map = new maplibregl.Map({
     container: 'app',
     style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
@@ -25,77 +24,67 @@
     pitch: 30
   });
 
-/* Botão de tema claro/escuro                                         */
+  /* Botão de tema claro/escuro */
+  let current = 'positron';
 
-let current = 'positron';
+  const switchBaseMap = () => {
+    current = current === 'positron' ? 'dark' : 'positron';
+    map.setStyle(
+      `https://basemaps.cartocdn.com/gl/${current === 'dark'
+        ? 'dark-matter'
+        : 'positron'}-gl-style/style.json`
+    );
+  }
 
-const switchBaseMap = () => {
-  current = current === 'positron' ? 'dark' : 'positron';
-  map.setStyle(
-    `https://basemaps.cartocdn.com/gl/${current === 'dark'
-      ? 'dark-matter'
-      : 'positron'}-gl-style/style.json`
-  );
-}
+  /* Geração das camadas */
+  const createLayers = () => {
+    return [
+      /* -- Pontos de interesse (ícone) -- */
+      new GeoJsonLayer({
+        id: 'points',
+        data: POINTS,
+        pointType: 'icon',
+        getIcon: point => ({
+          url: point.properties.icon,
+          width: 128,
+          height: 128,
+          anchorY: 128,
+        }),
+        getIconSize: 32,
+        sizeUnits: 'pixels',
+      }),
 
-/* ------------------------------------------------------------------ */
-/* 3. Geração das camadas                                             */
-/* ------------------------------------------------------------------ */
-const createLayers = () => {
-  return [
-    /* -- Pontos de interesse (ícone) -------------------------------- */
-    new GeoJsonLayer({
-      id: 'points',
-      data: POINTS,
-      pointType: 'icon',
-      getIcon: (point) => {
-        return ({
-        url: point.properties.icon,
-        width: 128,
-        height: 128,
-        anchorY: 128           // ancora a base do pin
-        })
-      },
-      getIconSize: 32,         // pixels
-      sizeUnits: 'pixels',
-      pickable: true,
-      autoHighlight: true,
-    }),
+      /* -- Limites municipais -- */
+      new GeoJsonLayer({
+        id: 'municipios',
+        data: MUNICIPIOS,
+        stroked: true,
+        filled: true,
+        lineWidthMinPixels: 2,
+        opacity: 0.4,
+        getLineColor: [60, 60, 60],
+        getFillColor: [200, 200, 200],
+      }),
 
-    /* -- Limites municipais ----------------------------------------- */
-    new GeoJsonLayer({
-      id: 'municipios',
-      data: MUNICIPIOS,
-      stroked: true,
-      filled: true,
-      lineWidthMinPixels: 2,
-      opacity: 0.4,
-      getLineColor: [60, 60, 60],
-      getFillColor: [200, 200, 200],
-    }),
+      /* -- Arcos de conexão -- */
+      new ArcLayer({
+        id: 'arcs',
+        data: POINTS,
+        dataTransform: g => g.features.filter(feature => feature.properties.id !== 0),
+        getSourcePosition: () => [
+          -46.39179622837122,
+          -23.9478225466285
+        ],
+        getTargetPosition: f => f.geometry.coordinates,
+        getSourceColor: [0, 128, 200],
+        getTargetColor: [200, 0, 80],
+        getWidth: 1,
+      })
+    ];
+  }
 
-    /* -- Arcos de conexão ------------------------------------------ */
-    new ArcLayer({
-      id: 'arcs',
-      data: POINTS,
-      dataTransform: g =>
-        g.features.filter(f => f.properties.id !== 0),
-      getSourcePosition: () => [
-        -46.39179622837122,
-        -23.9478225466285
-      ],
-      getTargetPosition: f => f.geometry.coordinates,
-      getSourceColor: [0, 128, 200],
-      getTargetColor: [200, 0, 80],
-      getWidth: 1,
-    })
-  ];
-}
-
-/* ------------------------------------------------------------------ */
-/* Overlay deck.gl                                                 */
-/* ------------------------------------------------------------------ */
-const deckOverlay = new MapboxOverlay({
+  /* Overlay deck.gl */
+  const deckOverlay = new MapboxOverlay({
     interleaved: true,
     layers: createLayers()
   });
@@ -104,20 +93,23 @@ const deckOverlay = new MapboxOverlay({
   map.addControl(new maplibregl.NavigationControl());
 </script>
 
-<style>
-#app {
-  width: 100%;
-  height: 100vh;
-}
+<style scoped>
+  .btn {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 1;
+    background: white;
+    padding: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
 
-.btn {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  z-index: 1;
-  background: white;
-  padding: 5px;
-  border-radius: 5px;
-  cursor: pointer;
-}
+  .upload {
+    position: absolute;
+    bottom: 40px;
+    left: 10px;
+    z-index: 1;
+    cursor: pointer;
+  }
 </style>
