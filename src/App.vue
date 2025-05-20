@@ -1,71 +1,123 @@
 <template>
-  <div id="app"></div>
+  <div id="app">
+    <button class="btn" @click="switchBaseMap">Trocar Base Map</button>
+  </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
+  import {MapboxOverlay} from '@deck.gl/mapbox';
+  import {GeoJsonLayer, ArcLayer} from '@deck.gl/layers';
   import maplibregl from 'maplibre-gl';
-  import { Deck } from '@deck.gl/core';
-  import { MapboxOverlay } from '@deck.gl/mapbox';
-  import { GeoJsonLayer } from '@deck.gl/layers';
 
+  // GeoJSON
+  const POINTS = './data/pontos_de_interesse.geojson';
+  const MUNICIPIOS = './data/municipios.geojson';
+
+/* ------------------------------------------------------------------ */
+/* 1. Mapa MapLibre                                                   */
+/* ------------------------------------------------------------------ */
   const map = new maplibregl.Map({
-      container: 'app',
-      style: 'https://demotiles.maplibre.org/style.json',
-      center: [0.11, 51.49],
-      zoom: 6,
+    container: 'app',
+    style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+    center: [-46.64809660565238, -23.650080196548778],
+    zoom: 8,
+    bearing: 0,
+    pitch: 30
   });
 
-  map.on('load', () => {
+/* Botão de tema claro/escuro                                         */
 
-    const deck = new Deck({
-      canvas: map.getCanvas(),
-      width: '100%',
-      height: '100%',
-      controller: false,
-    });
+let current = 'positron';
 
-    const testLayer = new GeoJsonLayer({ id: 'test', data: [] });
+const switchBaseMap = () => {
+  current = current === 'positron' ? 'dark' : 'positron';
+  map.setStyle(
+    `https://basemaps.cartocdn.com/gl/${current === 'dark'
+      ? 'dark-matter'
+      : 'positron'}-gl-style/style.json`
+  );
+}
 
-    const overlay = new MapboxOverlay({
-      interleaved: false,
-      layers: [testLayer]
-    });
+/* ------------------------------------------------------------------ */
+/* 3. Geração das camadas                                             */
+/* ------------------------------------------------------------------ */
+const createLayers = () => {
+  return [
+    /* -- Pontos de interesse (ícone) -------------------------------- */
+    new GeoJsonLayer({
+      id: 'points',
+      data: POINTS,
+      pointType: 'icon',
+      getIcon: (point) => {
+        return ({
+        url: point.properties.icon,
+        width: 128,
+        height: 128,
+        anchorY: 128           // ancora a base do pin
+        })
+      },
+      getIconSize: 32,         // pixels
+      sizeUnits: 'pixels',
+      pickable: true,
+      autoHighlight: true,
+    }),
 
-    map.addControl(overlay);
+    /* -- Limites municipais ----------------------------------------- */
+    new GeoJsonLayer({
+      id: 'municipios',
+      data: MUNICIPIOS,
+      stroked: true,
+      filled: true,
+      lineWidthMinPixels: 2,
+      opacity: 0.4,
+      getLineColor: [60, 60, 60],
+      getFillColor: [200, 200, 200],
+    }),
 
-    console.log('✅ Deck.gl integrado via MapboxOverlay!');
+    /* -- Arcos de conexão ------------------------------------------ */
+    new ArcLayer({
+      id: 'arcs',
+      data: POINTS,
+      dataTransform: g =>
+        g.features.filter(f => f.properties.id !== 0),
+      getSourcePosition: () => [
+        -46.39179622837122,
+        -23.9478225466285
+      ],
+      getTargetPosition: f => f.geometry.coordinates,
+      getSourceColor: [0, 128, 200],
+      getTargetColor: [200, 0, 80],
+      getWidth: 1,
+    })
+  ];
+}
 
+/* ------------------------------------------------------------------ */
+/* Overlay deck.gl                                                 */
+/* ------------------------------------------------------------------ */
+const deckOverlay = new MapboxOverlay({
+    interleaved: true,
+    layers: createLayers()
   });
 
-
-
-  // await map.once('load');
-
-  // const deckOverlay = new MapboxOverlay({
-  //   interleaved: true,
-  //   layers: [
-  //     new ScatterplotLayer({
-  //       id: 'deckgl-circle',
-  //       data: [
-  //         {position: [0.45, 51.47]}
-  //       ],
-  //       getPosition: d => d.position,
-  //       getFillColor: [255, 0, 0, 100],
-  //       getRadius: 1000,
-  //       beforeId: 'watername_ocean' // In interleaved mode render the layer under map labels
-  //     })
-  //   ]
-  // });
-
-  // map.addControl(deckOverlay);
-
-
+  map.addControl(deckOverlay);
+  map.addControl(new maplibregl.NavigationControl());
 </script>
 
 <style>
-
 #app {
   width: 100%;
   height: 100vh;
+}
+
+.btn {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1;
+  background: white;
+  padding: 5px;
+  border-radius: 5px;
+  cursor: pointer;
 }
 </style>
