@@ -12,9 +12,9 @@ Este projeto é uma aplicação web interativa que combina **MapLibre GL JS** co
 
 ---
 
-## 📦 Development
+🚀 Iniciando o Projeto
 
-- Clone this repository:
+1. Clone o repositório:
 
 ```shell
 $ git clone git@github.com:SabrinaBarros/geospot.git
@@ -23,13 +23,13 @@ $ git clone git@github.com:SabrinaBarros/geospot.git
 $ cd geospot
 ```
 
-- And install all dependencies:
+2. Instale as dependências:
 
 ```shell
 $ npm install
 ```
 
-- Start the project:
+3. Inicie o servidor de desenvolvimento:
 
 ```shell
 $ npm run dev
@@ -46,10 +46,9 @@ $ npm run dev
 | 🌓 Alternância de estilo de mapa | Botão para alternar entre temas claro e escuro.                   |
 | 🎯 Zoom, navegação e rotação     | Navegação 3D com pitch e bearing via Deck.gl + MapLibre.          |
 
+## Contribuindo 💌
 
-## Contributing 💌
-
-If you would like to contribute to the project, feel free to check the [CONTRIBUTING](CONTRIBUTING.md) file for more information. 
+Contribuições são super bem-vindas! Se quiser ajudar, por favor veja o arquivo [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## License 📃
 
@@ -57,4 +56,4 @@ If you would like to contribute to the project, feel free to check the [CONTRIBU
 
 <hr>
 
- If you have suggestions or encounter issues, please feel free to contribute or report issues. ✨
+Se tiver sugestões ou encontrar algum problema, sinta-se à vontade para abrir uma issue ou enviar um pull request! 🚀 ✨
