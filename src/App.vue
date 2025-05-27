@@ -1,7 +1,6 @@
 <template>
   <div class="app">
     <button class="btn" @click="switchBaseMap">Trocar Base Map</button>
-    <!-- <input class="upload" type="file" id="upload" @change="handleFileChange" ref="fileInput" accept="geojson/*"/> -->
   </div>
 </template>
 
@@ -102,14 +101,6 @@
     background: white;
     padding: 5px;
     border-radius: 5px;
-    cursor: pointer;
-  }
-
-  .upload {
-    position: absolute;
-    bottom: 40px;
-    left: 10px;
-    z-index: 1;
     cursor: pointer;
   }
 </style>

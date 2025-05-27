@@ -1,26 +1,23 @@
 {
-  "name": "mapa-projeto",
+  "name": "geospot",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc -b && vite build",
+    "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@deck.gl/core": "^9.1.11",
-    "@deck.gl/layers": "^9.1.11",
-    "@deck.gl/mapbox": "^9.1.11",
-    "deck.gl": "^9.1.11",
+    "@deck.gl/core": "^9.1.12",
+    "@deck.gl/layers": "^9.1.12",
+    "@deck.gl/mapbox": "^9.1.12",
+    "deck.gl": "^9.1.12",
     "maplibre-gl": "^5.5.0",
     "vue": "^3.5.13"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.3",
-    "@vue/tsconfig": "^0.7.0",
-    "typescript": "~5.8.3",
-    "vite": "^6.3.5",
-    "vue-tsc": "^2.2.8"
+    "vite": "^6.3.5"
   }
 }
