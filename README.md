@@ -5,7 +5,7 @@ Este projeto é uma aplicação web interativa que combina **MapLibre GL JS** co
 ## 🛠 Tecnologias utilizadas
 
 - [Vue.js 3](https://vuejs.org/)
-- [MapLibre GL JS](https://maplibre.org/maplibre-gl-js-docs/)
+- [MapLibre GL JS](https://maplibre.org/)
 - [Deck.gl](https://deck.gl/)
 - [Vite](https://vitejs.dev/)
 - [GeoJSON](https://geojson.org/)
@@ -35,20 +35,31 @@ $ npm install
 $ npm run dev
 ```
 
+## 📦 Comandos
+
+Após clonar o projeto e instalar as dependências, você pode usar os seguintes comandos no seu terminal:
+
+| Command | Description |
+| ------- | ----------- |
+| `npm run dev` | Inicia o projeto em modo de desenvolvimento (localhost). |
+| `npm run lint` | Executa o linter para verificar problemas de formatação e código. |
+
+> 📌 Observação: Antes de executar qualquer comando, certifique-se de ter o Node.js instalado na sua máquina.
+
 ## 🗺️ Funcionalidades
 
-| Funcionalidade                   | Descrição                                                         |
-| -------------------------------- | ----------------------------------------------------------------- |
-| 🌐 Mapa Base                     | Carregamento de mapas base via MapLibre (Positron e Dark Matter). |
-| 📍 Pontos de Interesse           | Camada GeoJSON com pontos customizados (ex: ícones via URL).      |
-| 🏙️ Polígonos Municipais         | Camada de polígonos carregada a partir de GeoJSON.                |
-| 🔗 Conexões com Arcos            | Arcos ligando um ponto base aos demais pontos do mapa.            |
-| 🌓 Alternância de estilo de mapa | Botão para alternar entre temas claro e escuro.                   |
-| 🎯 Zoom, navegação e rotação     | Navegação 3D com pitch e bearing via Deck.gl + MapLibre.          |
+| Funcionalidade | Descrição |
+| -------------- | --------- |
+| 🌐 Mapa Base | Carregamento de mapas base via MapLibre (Positron e Dark Matter). |
+| 📍 Pontos de Interesse | Camada GeoJSON com pontos customizados (ex: ícones via URL). |
+| 🏙️ Polígonos Municipais | Camada de polígonos carregada a partir de GeoJSON. |
+| 🔗 Conexões com Arcos | Arcos ligando um ponto base aos demais pontos do mapa. |
+| 🌓 Alternância de estilo de mapa | Botão para alternar entre temas claro e escuro. |
+| 🎯 Zoom, navegação e rotação | Navegação 3D com pitch e bearing via Deck.gl + MapLibre. |
 
 ## Contribuindo 💌
 
-Contribuições são super bem-vindas! Se quiser ajudar, por favor veja o arquivo [CONTRIBUTING.md](./CONTRIBUTING.md).
+Contribuições são super bem-vindas! Se quiser ajudar, por favor confira o guia de [contribuição](./CONTRIBUTING.md).
 
 ## License 📃
 
